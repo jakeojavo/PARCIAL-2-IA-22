@@ -12,6 +12,8 @@ public class PatrolState : MonoBaseState {
 
     public float timeToIdle;
     public override event Action OnNeedsReplan;
+
+    public bool onState;
     
     private void Awake()
     {
@@ -20,18 +22,28 @@ public class PatrolState : MonoBaseState {
         myMovement = GetComponent<EnemyMovement>();
        
     }
-
-    public override void UpdateLoop() {
+    
+    public override void Enter(IState @from, Dictionary<string, object> transitionParameters = null)
+    {
+        base.Enter(@from, transitionParameters);
         
         if (!myMovement.statesTriggers[EStates.PATROL])
         {
             myMovement.SetAllStatesToFalse();
-            myMovement.statesTriggers[EStates.PATROL] = true; 
+            myMovement.statesTriggers[EStates.PATROL] = true;
         }
 
+        onState = true;
+        timeToIdle = 0;
+    }
+
+    public override void UpdateLoop() {
+
+    }
+
+    private void Update()
+    {
         timeToIdle += Time.deltaTime;
-
-
     }
 
     public override IState ProcessInput() {
@@ -40,6 +52,7 @@ public class PatrolState : MonoBaseState {
         {
             Debug.Log("fui a idle");
             timeToIdle = 0;
+            onState = false;
             return Transitions["IdleState"];
         }
 
