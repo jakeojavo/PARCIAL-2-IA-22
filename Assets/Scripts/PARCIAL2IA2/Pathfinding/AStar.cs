@@ -6,11 +6,16 @@ using VSCodeEditor;
 
 public class AStar<T> {
 
+
     public IEnumerable<T> Run(T                                     start,
                               Func<T, bool>                         isGoal,
                               Func<T, IEnumerable<WeightedNode<T>>> explode,
                               Func<T, float>                        getHeuristic) {
-        
+
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+
+       
         var queue     = new PriorityQueue<T>();
         var distances = new Dictionary<T, float>();
         var parents   = new Dictionary<T, T>();
@@ -20,6 +25,15 @@ public class AStar<T> {
         queue.Enqueue(new WeightedNode<T>(start, 0));
         
         while (!queue.IsEmpty) {
+
+            if (stopwatch.ElapsedMilliseconds >= 1f / 30f)
+            {
+                stopwatch.Restart();
+                UnityEngine.Debug.LogError("GOAP DELAY TO CALCULATE ON ASTAR");
+                return null;
+            }
+
+
             var dequeued = queue.Dequeue();
             visited.Add(dequeued.Element);
 

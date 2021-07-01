@@ -40,8 +40,7 @@ public class ChaseState : MonoBaseState {
 
         }
 
-    }
-    
+    }    
 
     public override IState ProcessInput() {
 

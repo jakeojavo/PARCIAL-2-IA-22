@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Diagnostics;
+using System.Threading;
 
 namespace FSM {
 
@@ -30,6 +32,16 @@ namespace FSM {
 
         public IEnumerator Update() {
             while (Active) {
+
+                //var stopwatch = new Stopwatch();
+                //stopwatch.Start();
+
+                //if (stopwatch.ElapsedMilliseconds >= 1f / 30f)
+                //{
+                //    yield return null;
+                //    stopwatch.Restart();
+                //}
+
                 CurrentState.UpdateLoop();
                 
                 var nextState = CurrentState.ProcessInput();
@@ -39,7 +51,7 @@ namespace FSM {
                     var previousState = CurrentState;
                     var transitionParameters = CurrentState.Exit(nextState);
 
-                    Debug.Log("Exiting state '" + CurrentState.Name + "' to state '" + nextState.Name + "'.");
+                    UnityEngine.Debug.Log("Exiting state '" + CurrentState.Name + "' to state '" + nextState.Name + "'.");
                     
                     CurrentState = nextState;
                     CurrentState.Enter(previousState, transitionParameters);

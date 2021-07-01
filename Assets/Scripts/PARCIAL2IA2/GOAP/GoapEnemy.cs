@@ -152,9 +152,9 @@ public class GoapEnemy : MonoBehaviour {
 
             var planner = new GoapPlanner();
 
-            planner.Run(from, to, actions);
+            planner.Run(from, to, actions, OnReplan);
 
-            var plan = planner.Run(from, to, actions);
+            var plan = planner.Run(from, to, actions, OnReplan);
 
             ConfigureFsm(plan);
         
