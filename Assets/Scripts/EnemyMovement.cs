@@ -51,6 +51,7 @@ public class EnemyMovement : MonoBehaviour
 
         statesTriggers.Add(EStates.PATROL, false); //por cada estado agregar tambien la desactivacion en SetAllStatesToFalse
         statesTriggers.Add(EStates.CHASE, false);
+        statesTriggers.Add(EStates.ALERT, false);
         
     }
 
@@ -58,6 +59,7 @@ public class EnemyMovement : MonoBehaviour
     {
         statesTriggers[EStates.PATROL] = false;
         statesTriggers[EStates.CHASE] = false;
+        statesTriggers[EStates.ALERT] = false;
     }
 
     void Start()
@@ -121,7 +123,7 @@ public class EnemyMovement : MonoBehaviour
         //    myAgent.speed = 0;
         //}
 
-        if (myBehaviours.chasePlayerBehaviour == true || myBehaviours.alertBehaviour == true)
+        if (statesTriggers[EStates.CHASE] == true || statesTriggers[EStates.ALERT] == true)
         {
 
             nearWaypoints = Physics.OverlapSphere(transform.position, 10, myLayermask);
@@ -157,10 +159,7 @@ public class EnemyMovement : MonoBehaviour
           
             myAstarAgent.starterNode = nearestWaypoint.GetComponent<Node>();          
             myAstarAgent.endNode = playerNearestWaypoint.GetComponent<Node>();
-
             
-            
-        
             myAstarAgent.PathFindingA();
 
 
@@ -194,6 +193,7 @@ public class EnemyMovement : MonoBehaviour
 public enum EStates
 {
     PATROL,
-    CHASE
+    CHASE,
+    ALERT
     
 }

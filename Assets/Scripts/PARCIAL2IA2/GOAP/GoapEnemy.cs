@@ -92,46 +92,44 @@ public class GoapEnemy : MonoBehaviour {
         var actions = new List<GOAPAction>
             {
                 new GOAPAction("Patrol")
-                    .Pre("alarmTriggered", false)
-                    .Pre("isPatrolling", false)
-                    .Effect("isPatrolling", true)
-                    .Effect("doneRoutine", false)
+                    .Pre("isPatrolling", true)
+                    .Effect("foundPlayer", false)//recalculate
                     .LinkedState(patrolState),
                 
                 new GOAPAction("Chase")
-                    .Pre("isPatrolling", true)
+                    .Pre("isPlayerInSight", false)
+                    .Pre("isPlayerInRange", false)
                     .Effect("isPlayerInRange", true)
+                    .Effect("foundPlayer", true)
                     .Effect("isPlayerInSight", true)
-                    .Effect("isPatrolling", false)
-                    .Effect("alarmTriggered", true)
                     .LinkedState(chaseState),
 
                 new GOAPAction("Attack")
                     .Pre("isPlayerInRange", true)
-                    .Pre("hasBullet", true)
-                    .Effect("isPlayerAlive", false)
+                    .Pre("isPlayerInSight", true)
+                    .Effect("hasBullet", false)
+                    .Effect("alarmTriggered", true)
                     .LinkedState(attackState),
 
                 new GOAPAction("ReloadWeapon")
                     .Pre("hasBullet", false)
-                    .Effect("hasBullet", true)
-                    .Effect("doneRoutine", true)
+                    .Effect("hasBullet", true) //replan
                     .LinkedState(reloadState),
 
                 new GOAPAction("Alert")
                     .Pre("alarmTriggered", true)
+                    .Pre("hasBullet", true)
                     .Effect("isPlayerInSight", false)
                     .Effect("isPlayerInRange", false)
                     .Effect("alarmTriggered", false)
+                    .Effect("isPatrolling", true)
                     .LinkedState(alertState),
 
                 new GOAPAction("Idle")
                     .Pre("isPatrolling", true)
-                    .Effect("isIdle", true)
+                    .Pre("foundPlayer", false)
                     .Effect("isPlayerAlive", false)
-                    .Effect("doneRoutine", true)
                     .LinkedState(idleState)
-                    .Cost(5f)
             };
 
 
@@ -146,10 +144,11 @@ public class GoapEnemy : MonoBehaviour {
             from.values["missionFinished"] = false;
             from.values["isIdle"] = false;
             from.values["doneRoutine"] = false;
+            from.values["foundPlayer"] = false;
 
 
                 var to = new GOAPState();
-            to.values["doneRoutine"] = true;
+            to.values["isPlayerAlive"] = false;
 
             var planner = new GoapPlanner();
 

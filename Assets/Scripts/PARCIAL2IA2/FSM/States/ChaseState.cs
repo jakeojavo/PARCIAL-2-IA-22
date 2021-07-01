@@ -1,68 +1,91 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using FSM;
 using UnityEngine;
 
 public class ChaseState : MonoBaseState {
     
-    public EnemyBehaviours myBehaviours;
+    public EnemyWorldState myWorldState;
     public EnemyLineOfSight myLineOfSight;
     public EnemyMovement myMovement;
 
     public GameObject player;
     public float counter;
+    public float sqrDistance;
     
     private void Awake()
     {
         
-        myBehaviours = GetComponent<EnemyBehaviours>();
+        myWorldState = GetComponent<EnemyWorldState>();
         myLineOfSight = GetComponent<EnemyLineOfSight>();
         myMovement = GetComponent<EnemyMovement>();
         player = GameObject.FindGameObjectWithTag("Player");
-        counter = 0;
     }
-    
 
-    public override void UpdateLoop() {
+
+    public override void UpdateLoop()
+    {
         
-        if (myMovement.myAgent.speed <= 1f)
-            myMovement.myAgent.speed += Time.deltaTime;
-
-        if (myMovement.offsetSpeed <= 3f)
-            myMovement.offsetSpeed += Time.deltaTime;
-
-        if (myMovement.statesTriggers[EStates.CHASE] == false)
-            myMovement.statesTriggers[EStates.CHASE] = true;
-
-        if (!myLineOfSight.playerOnSight)
+        sqrDistance = (player.transform.position - transform.position).sqrMagnitude;
+        
+        if (myLineOfSight.playerOnSight && myLineOfSight.playerOnAngle)
         {
-            counter += Time.deltaTime;
-        }
-        else
-        {
-            counter = 0;
+            if (!myWorldState.seenPlayer) myWorldState.seenPlayer = true;
+
+            if (!myMovement.statesTriggers[EStates.CHASE])
+            {
+                myMovement.SetAllStatesToFalse();
+                myMovement.statesTriggers[EStates.CHASE] = true;
+            }
+
         }
 
-        Debug.Log(counter);
+        if (myWorldState.seenPlayer)
+        {
+            if (sqrDistance <= 1f)
+            {
+                if (myMovement.myAgent.speed >= 0f)
+                    myMovement.myAgent.speed -= Time.deltaTime / 3;
+
+                if (myMovement.offsetSpeed >= 0f)
+                    myMovement.offsetSpeed -= Time.deltaTime / 2;
+            }
+
+            if (sqrDistance >= 1f)
+            {
+                if (myMovement.myAgent.speed <= 2f)
+                    myMovement.myAgent.speed += Time.deltaTime / 3;
+
+                if (myMovement.offsetSpeed <= 3f)
+                    myMovement.offsetSpeed += Time.deltaTime / 2;
+            }
+
+        }
 
     }
 
     public override IState ProcessInput() {
-        
-        var sqrDistance = (player.transform.position - transform.position).sqrMagnitude;
-      
-        if (counter >= 4f)
+
+        if (myWorldState.seenPlayer) //comportamiento si vio al player
         {
-            Debug.Log("fui a Alert");
-            return  Transitions["AlertState"];
+            if (sqrDistance <= 4f)
+            {
+                myWorldState.seenPlayer = false;
+                return  Transitions["AttackState"];
+            }
+            
+            if (!myLineOfSight.playerOnSight && !myLineOfSight.playerOnAngle)
+            {
+                return  Transitions["AttackState"];
+            }
         }
-        
-        if (myLineOfSight.playerOnSight == true && sqrDistance <= 4f)
+
+        else //si no lo vi sigo con las transiciones
         {
-            Debug.Log("ataco");
-            return  Transitions["AttackState"];
+            return Transitions["AttackState"];
         }
-        
-        return this;
+
+            return this;
 
     }
 }

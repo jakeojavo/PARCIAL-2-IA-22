@@ -28,21 +28,25 @@ public class IdleState : MonoBaseState {
         if (myMovement.offsetSpeed >= 0f)
             myMovement.offsetSpeed -= Time.deltaTime / 2;
 
-        time += Time.deltaTime;
+        if (myMovement.myAgent.speed <= 0f)
+        {
+            time += Time.deltaTime;  
+        }
+
+        
 
 
     }
 
     public override IState ProcessInput() {
         
-        if (time >= 5f)
+        if (time >= 5f) //si pasan 5 segundos sale de idle y replanea
         {
             OnNeedsReplan?.Invoke();
             time = 0;
-           // return Transitions["PatrolState"];
         }
 
-        if (myLineOfSight.playerOnSight)
+        if (myLineOfSight.playerOnSight) //si ve al player, replanea
         {
             OnNeedsReplan?.Invoke();
             time = 0;

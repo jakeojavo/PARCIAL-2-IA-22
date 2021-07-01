@@ -1,0 +1,13 @@
+﻿# Default ignored files
+/shelf/
+/workspace.xml
+# Rider ignored files
+/modules.xml
+/.idea.PARCIAL-2-IA-2.iml
+/contentModel.xml
+/projectSettingsUpdater.xml
+# Datasource local storage ignored files
+/../../../../../../../../../../../:\Users\Javo\Desktop\IA2\Lardieri Javier TP2 Entrega IA1\PARCIAL 2 IA 2\PARCIAL-2-IA-2\.idea\.idea.PARCIAL-2-IA-2\.idea/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/

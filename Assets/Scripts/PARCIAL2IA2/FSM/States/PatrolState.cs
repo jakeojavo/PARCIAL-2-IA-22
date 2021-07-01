@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FSM;
 using UnityEngine;
+using Random = System.Random;
 
 public class PatrolState : MonoBaseState {
 
@@ -9,6 +11,7 @@ public class PatrolState : MonoBaseState {
     public EnemyMovement myMovement;
 
     public float timeToIdle;
+    public override event Action OnNeedsReplan;
     
     private void Awake()
     {
@@ -28,9 +31,13 @@ public class PatrolState : MonoBaseState {
 
         if (myMovement.offsetSpeed >= 0f)
             myMovement.offsetSpeed -= Time.deltaTime / 2;
-        
-        if (myMovement.statesTriggers[EStates.PATROL] == false)
-            myMovement.statesTriggers[EStates.PATROL] = true;
+
+        if (!myMovement.statesTriggers[EStates.PATROL])
+        {
+            myMovement.SetAllStatesToFalse();
+            myMovement.statesTriggers[EStates.PATROL] = true; 
+        }
+            
 
 
         timeToIdle += Time.deltaTime;
@@ -40,17 +47,16 @@ public class PatrolState : MonoBaseState {
 
     public override IState ProcessInput() {
 
-        if (myLineOfSight.playerOnSight)
-        {
-            Debug.Log("fui a chase");
-            return Transitions["ChaseState"];
-        }
-
-        if (timeToIdle >= 10)
+        if (timeToIdle >= 10) //cada 10 segundos va a IDLE
         {
             Debug.Log("fui a idle");
             timeToIdle = 0;
             return Transitions["IdleState"];
+        }
+
+        if (myLineOfSight.playerOnSight && myLineOfSight.playerOnAngle) //si veo al player, replaneo
+        {
+            OnNeedsReplan?.Invoke();
         }
 
         return this;

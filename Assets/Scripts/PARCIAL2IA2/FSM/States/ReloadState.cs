@@ -11,6 +11,7 @@ public class ReloadState : MonoBaseState {
     public GameObject player;
 
     public float reloadTime;
+    public EnemyWorldState myWorldState;
     public override event Action OnNeedsReplan;
     
     private void Awake()
@@ -19,18 +20,28 @@ public class ReloadState : MonoBaseState {
         myLineOfSight = GetComponent<EnemyLineOfSight>();
         myMovement = GetComponent<EnemyMovement>();
         player = GameObject.FindGameObjectWithTag("Player");
-       
+        myMovement = GetComponent<EnemyMovement>();
+        myWorldState = GetComponent<EnemyWorldState>();
+
     }
 
     public override void UpdateLoop() {
         
-        if (myMovement.myAgent.speed >= 0.3f)
-            myMovement.myAgent.speed -= Time.deltaTime / 3;
+        
+        if (myWorldState.seenPlayer)
+        {
+            if (myMovement.myAgent.speed >= 0.3f)
+                myMovement.myAgent.speed -= Time.deltaTime / 3;
 
-        if (myMovement.offsetSpeed >= 0f)
-            myMovement.offsetSpeed -= Time.deltaTime / 2;
+            if (myMovement.offsetSpeed >= 0f)
+                myMovement.offsetSpeed -= Time.deltaTime / 2;
+            
+            reloadTime += Time.deltaTime;
 
-        reloadTime += Time.deltaTime;
+        }
+        
+
+       
 
 
     }
@@ -39,14 +50,27 @@ public class ReloadState : MonoBaseState {
         
         var sqrDistance = (player.transform.position - transform.position).sqrMagnitude;
 
-        if (reloadTime >= 3f)
+        if (myWorldState.seenPlayer) //si ya vio previamente al player
         {
+            if (myLineOfSight.playerOnSight && myLineOfSight.playerOnAngle && reloadTime >= 3
+            ) //si paso el tiempo de recarga y lo ve, replanea
+            {
+                reloadTime = 0;
 
-            reloadTime = 0;
-            
-           OnNeedsReplan?.Invoke();
+                OnNeedsReplan?.Invoke();
+            }
 
+            if (!myLineOfSight.playerOnSight && !myLineOfSight.playerOnAngle && reloadTime >= 3
+            ) //si paso el tiempo de recarga y no lo ve, va a alerta
+            {
+                reloadTime = 0;
+                return Transitions["AlertState"];
+            }
         }
+
+        else return Transitions["AlertState"]; //si no vio al player, pasa a alerta
+
+      
 
         return this;
 
