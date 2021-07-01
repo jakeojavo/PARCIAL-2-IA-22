@@ -13,6 +13,8 @@ public class AlertState : MonoBaseState {
     public float timer;
     
     public override event Action OnNeedsReplan;
+
+    public bool onState;
     
     private void Awake()
     {
@@ -22,41 +24,54 @@ public class AlertState : MonoBaseState {
         myWorldState = GetComponent<EnemyWorldState>();
 
     }
+    
+    public override void Enter(IState @from, Dictionary<string, object> transitionParameters = null)
+    {
+        base.Enter(@from, transitionParameters);
+        
+        if (!myMovement.statesTriggers[EStates.ALERT])
+        {
+            myMovement.SetAllStatesToFalse();
+            myMovement.statesTriggers[EStates.ALERT] = true;
+        }
+
+        onState = true;
+
+        timer = 0;
+    }
 
     public override void UpdateLoop() {
 
+    }
+
+    public void Update()
+    {
         if (myWorldState.seenPlayer)
         {
             timer += Time.deltaTime;
-
-            if (!myMovement.statesTriggers[EStates.ALERT])
-            {
-                myMovement.SetAllStatesToFalse();
-                myMovement.statesTriggers[EStates.ALERT] = true;
-            }
-          
         }
-        
-
     }
+
 
     public override IState ProcessInput() {
 
         if (myLineOfSight.playerOnSight && myLineOfSight.playerOnAngle) //si ve al player, replanea
         {
+            onState = false;
             OnNeedsReplan?.Invoke();
         }
 
         if (!myWorldState.seenPlayer) //si no vio al player previamente, va directo a patrol
         {
+            onState = false;
             Debug.Log("fui a patrol, no vi al player");
             return Transitions["PatrolState"];
         }
 
         if (timer >= 10f) //pero si lo vio suma el timer, y pasados 10 segundos va a patrol
         {
+            onState = false;
             Debug.Log("fui a patrol, vi al player");
-            timer = 0f;
             myWorldState.seenPlayer = false;
             return Transitions["PatrolState"];
         }

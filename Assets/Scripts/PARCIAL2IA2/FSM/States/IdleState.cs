@@ -32,8 +32,6 @@ public class IdleState : MonoBaseState {
         }
 
         onState = true;
-        
-        Debug.Log("a");
 
         time = 0;
     }
@@ -55,14 +53,16 @@ public class IdleState : MonoBaseState {
         
         if (time >= 5f) //si pasan 5 segundos sale de idle y replanea
         {
-            OnNeedsReplan?.Invoke();
             onState = false;
+            OnNeedsReplan?.Invoke();
+         
         }
 
         if (myLineOfSight.playerOnSight) //si ve al player, replanea
         {
-            OnNeedsReplan?.Invoke();
             onState = false;
+            OnNeedsReplan?.Invoke();
+            
         }
 
         return this;
