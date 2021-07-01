@@ -27,15 +27,6 @@ public class AlertState : MonoBaseState {
 
         if (myWorldState.seenPlayer)
         {
-            if (myMovement.myAgent.speed >= 0.5f)
-                myMovement.myAgent.speed -= Time.deltaTime / 3;
-
-            if (myMovement.myAgent.speed < 0.5f)
-                myMovement.myAgent.speed += Time.deltaTime;
-
-            if (myMovement.offsetSpeed >= 0f)
-                myMovement.offsetSpeed -= Time.deltaTime / 2;
-
             timer += Time.deltaTime;
 
             if (!myMovement.statesTriggers[EStates.ALERT])

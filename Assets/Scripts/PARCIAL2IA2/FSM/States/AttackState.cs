@@ -39,7 +39,6 @@ public class AttackState : MonoBaseState {
         
         distance = (player.transform.position - transform.position).sqrMagnitude;
         
-
         if (distance <= 4f)
             
             {

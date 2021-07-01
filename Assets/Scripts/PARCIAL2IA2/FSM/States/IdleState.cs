@@ -9,6 +9,7 @@ public class IdleState : MonoBaseState {
     public EnemyLineOfSight myLineOfSight;
     public EnemyMovement myMovement;
     public float time;
+    public bool onState;
     
     public override event Action OnNeedsReplan;
     
@@ -20,22 +21,34 @@ public class IdleState : MonoBaseState {
        
     }
 
-    public override void UpdateLoop() {
+    public override void Enter(IState @from, Dictionary<string, object> transitionParameters = null)
+    {
+        base.Enter(@from, transitionParameters);
         
-        if (myMovement.myAgent.speed >= 0f)
-            myMovement.myAgent.speed -= Time.deltaTime / 3;
-
-        if (myMovement.offsetSpeed >= 0f)
-            myMovement.offsetSpeed -= Time.deltaTime / 2;
-
-        if (myMovement.myAgent.speed <= 0f)
+        if (!myMovement.statesTriggers[EStates.IDLE])
         {
-            time += Time.deltaTime;  
+            myMovement.SetAllStatesToFalse();
+            myMovement.statesTriggers[EStates.IDLE] = true;
         }
 
+        onState = true;
         
+        Debug.Log("a");
 
+        time = 0;
+    }
 
+    public override void UpdateLoop()
+    {
+
+    }
+
+    private void Update()
+    {
+        if (onState)
+        {
+            time += Time.deltaTime;
+        }
     }
 
     public override IState ProcessInput() {
@@ -43,13 +56,13 @@ public class IdleState : MonoBaseState {
         if (time >= 5f) //si pasan 5 segundos sale de idle y replanea
         {
             OnNeedsReplan?.Invoke();
-            time = 0;
+            onState = false;
         }
 
         if (myLineOfSight.playerOnSight) //si ve al player, replanea
         {
             OnNeedsReplan?.Invoke();
-            time = 0;
+            onState = false;
         }
 
         return this;

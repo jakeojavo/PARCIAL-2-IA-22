@@ -13,6 +13,8 @@ public class ReloadState : MonoBaseState {
     public float reloadTime;
     public EnemyWorldState myWorldState;
     public override event Action OnNeedsReplan;
+
+    public bool onState;
     
     private void Awake()
     {
@@ -24,13 +26,29 @@ public class ReloadState : MonoBaseState {
         myWorldState = GetComponent<EnemyWorldState>();
 
     }
+    
+    public override void Enter(IState @from, Dictionary<string, object> transitionParameters = null)
+    {
+        base.Enter(@from, transitionParameters);
 
-    public override void UpdateLoop() {
+        onState = true;
         
+        Debug.Log("a");
+
+        reloadTime = 0;
+        
+    }
+
+    private void Update()
+    {
+        if (onState)
+        {
+            reloadTime += Time.deltaTime;
+        }
         
         if (myWorldState.seenPlayer)
         {
-            if (myMovement.myAgent.speed >= 0.3f)
+            if (myMovement.myAgent.speed >= 0.2f)
                 myMovement.myAgent.speed -= Time.deltaTime / 3;
 
             if (myMovement.offsetSpeed >= 0f)
@@ -39,11 +57,6 @@ public class ReloadState : MonoBaseState {
             reloadTime += Time.deltaTime;
 
         }
-        
-
-       
-
-
     }
 
     public override IState ProcessInput() {

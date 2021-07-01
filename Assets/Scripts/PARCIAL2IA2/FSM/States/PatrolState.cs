@@ -23,22 +23,11 @@ public class PatrolState : MonoBaseState {
 
     public override void UpdateLoop() {
         
-        if (myMovement.myAgent.speed >= 0.5f)
-            myMovement.myAgent.speed -= Time.deltaTime / 3;
-
-        if (myMovement.myAgent.speed < 0.5f)
-            myMovement.myAgent.speed += Time.deltaTime;
-
-        if (myMovement.offsetSpeed >= 0f)
-            myMovement.offsetSpeed -= Time.deltaTime / 2;
-
         if (!myMovement.statesTriggers[EStates.PATROL])
         {
             myMovement.SetAllStatesToFalse();
             myMovement.statesTriggers[EStates.PATROL] = true; 
         }
-            
-
 
         timeToIdle += Time.deltaTime;
 

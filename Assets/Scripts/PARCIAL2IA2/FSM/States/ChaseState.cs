@@ -40,29 +40,8 @@ public class ChaseState : MonoBaseState {
 
         }
 
-        if (myWorldState.seenPlayer)
-        {
-            if (sqrDistance <= 1f)
-            {
-                if (myMovement.myAgent.speed >= 0f)
-                    myMovement.myAgent.speed -= Time.deltaTime / 3;
-
-                if (myMovement.offsetSpeed >= 0f)
-                    myMovement.offsetSpeed -= Time.deltaTime / 2;
-            }
-
-            if (sqrDistance >= 1f)
-            {
-                if (myMovement.myAgent.speed <= 2f)
-                    myMovement.myAgent.speed += Time.deltaTime / 3;
-
-                if (myMovement.offsetSpeed <= 3f)
-                    myMovement.offsetSpeed += Time.deltaTime / 2;
-            }
-
-        }
-
     }
+    
 
     public override IState ProcessInput() {
 

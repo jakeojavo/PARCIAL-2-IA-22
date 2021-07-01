@@ -36,6 +36,7 @@ public class EnemyMovement : MonoBehaviour
     public EnemyLineOfSight myLineOfSight;
 
     public Dictionary<EStates, bool> statesTriggers = new Dictionary<EStates, bool>();
+    public float sqrDistance;
 
     
 
@@ -52,6 +53,7 @@ public class EnemyMovement : MonoBehaviour
         statesTriggers.Add(EStates.PATROL, false); //por cada estado agregar tambien la desactivacion en SetAllStatesToFalse
         statesTriggers.Add(EStates.CHASE, false);
         statesTriggers.Add(EStates.ALERT, false);
+        statesTriggers.Add(EStates.IDLE, false);
         
     }
 
@@ -60,6 +62,7 @@ public class EnemyMovement : MonoBehaviour
         statesTriggers[EStates.PATROL] = false;
         statesTriggers[EStates.CHASE] = false;
         statesTriggers[EStates.ALERT] = false;
+        statesTriggers[EStates.IDLE] = false;
     }
 
     void Start()
@@ -81,6 +84,8 @@ public class EnemyMovement : MonoBehaviour
     void Update()
     {
         GetDir();
+        SetSpeed();
+        sqrDistance = (player.transform.position - transform.position).sqrMagnitude;
     }
 
     void GetDir()
@@ -96,6 +101,15 @@ public class EnemyMovement : MonoBehaviour
 
         if (statesTriggers[EStates.PATROL] == true)
         {
+            if (myAgent.speed >= 0.5f)
+                myAgent.speed -= Time.deltaTime / 3;
+
+            if (myAgent.speed < 0.5f)
+                myAgent.speed += Time.deltaTime;
+
+            if (offsetSpeed >= 0f)
+                offsetSpeed -= Time.deltaTime / 2;
+            
             target = myPatrolWaypoints[currentWaypoint].transform;
 
             if (Vector3.Distance(transform.position, myPatrolWaypoints[currentWaypoint].transform.position) <= 1f && currentWaypoint < waypointCount - 1)
@@ -182,8 +196,71 @@ public class EnemyMovement : MonoBehaviour
             {
                 target = player.transform;
             }
+
+           
+            
+           
         }
 
+    }
+
+    void SetSpeed()
+    {
+        if (statesTriggers[EStates.CHASE])
+        {
+            if (sqrDistance <= 1f)
+            {
+                if (myAgent.speed >= 0f)
+                    myAgent.speed -= Time.deltaTime / 3;
+
+                if (offsetSpeed >= 0f)
+                    offsetSpeed -= Time.deltaTime / 2;
+            }
+
+            if (sqrDistance >= 1f)
+            {
+                if (myAgent.speed <= 1f)
+                    myAgent.speed += Time.deltaTime / 3;
+
+                if (offsetSpeed <= 3f)
+                    offsetSpeed += Time.deltaTime / 2;
+            }  
+        }
+
+
+        if (statesTriggers[EStates.PATROL])
+        {
+            if (myAgent.speed >= 0.5f)
+                myAgent.speed -= Time.deltaTime / 3;
+
+            if (myAgent.speed < 0.5f)
+                myAgent.speed += Time.deltaTime;
+
+            if (offsetSpeed >= 0f)
+                offsetSpeed -= Time.deltaTime / 2;
+        }
+
+        if (statesTriggers[EStates.ALERT])
+        {
+            if (myAgent.speed >= 0.5f)
+                myAgent.speed -= Time.deltaTime / 3;
+
+            if (myAgent.speed < 0.5f)
+                myAgent.speed += Time.deltaTime;
+
+            if (offsetSpeed >= 0f)
+                offsetSpeed -= Time.deltaTime / 2;
+        }
+
+        if (statesTriggers[EStates.IDLE])
+        {
+            if (myAgent.speed >= 0f)
+                myAgent.speed -= Time.deltaTime;
+
+            if (offsetSpeed >= 0f)
+                offsetSpeed -= Time.deltaTime;
+        }
+       
     }
 
    
@@ -194,6 +271,7 @@ public enum EStates
 {
     PATROL,
     CHASE,
-    ALERT
+    ALERT,
+    IDLE
     
 }
