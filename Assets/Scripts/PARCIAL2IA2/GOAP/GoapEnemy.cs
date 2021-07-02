@@ -89,7 +89,7 @@ public class GoapEnemy : MonoBehaviour {
 
     private void PlanAndExecute()
     {
-        var actions = new List<GOAPAction>
+        var actions = new List<GOAPAction> //GOAP goap ENTREGA PARCIAL IA2-parcial 2 
             {
                 new GOAPAction("Patrol")
                     .Pre("isPatrolling", true)
@@ -154,10 +154,10 @@ public class GoapEnemy : MonoBehaviour {
 
             planner.Run(from, to, actions, OnReplan);
 
-            var plan = planner.Run(from, to, actions, OnReplan);
+            var plan = planner.Run(from, to, actions, OnReplan);//GOAP goap ENTREGA PARCIAL IA2-parcial 2 
 
-            ConfigureFsm(plan);
-        
+        ConfigureFsm(plan);//GOAP goap ENTREGA PARCIAL IA2-parcial 2 
+
     }
 
     private void OnReplan() {
@@ -168,12 +168,12 @@ public class GoapEnemy : MonoBehaviour {
             return;
         }
         
-        PlanAndExecute();
+        PlanAndExecute();//GOAP goap ENTREGA PARCIAL IA2-parcial 2 
     }
 
     private void ConfigureFsm(IEnumerable<GOAPAction> plan) {
         Debug.Log("Completed Plan");
-        _fsm = GoapPlanner.ConfigureFSM(plan, StartCoroutine);
+        _fsm = GoapPlanner.ConfigureFSM(plan, StartCoroutine); //GOAP goap ENTREGA PARCIAL IA2-parcial 2 
         _fsm.Active = true;
     }
 

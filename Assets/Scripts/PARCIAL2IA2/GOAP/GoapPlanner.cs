@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class GoapPlanner
 {
+    //GOAP goap ENTREGA PARCIAL IA2-parcial 2 
 
     private const int _WATCHDOG_MAX = 200;
 

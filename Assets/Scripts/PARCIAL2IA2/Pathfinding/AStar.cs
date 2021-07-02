@@ -32,7 +32,7 @@ public class AStar<T>
             if (stopwatch.ElapsedMilliseconds >= 1f / CONSTANTVAR)
             {
                 stopwatch.Restart();
-                UnityEngine.Debug.LogError("GOAP DELAY TO CALCULATE ON ASTAR");
+                UnityEngine.Debug.LogError("GOAP DELAY TO CALCULATE ON ASTAR"); //GOAP goap ENTREGA PARCIAL IA2-parcial 2 
                 return null;
             }
 
