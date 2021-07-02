@@ -72,11 +72,9 @@ public class AttackState : MonoBaseState
 
                 if (distance < 10f)
                 {
-                    var newBullet = GameObject.Instantiate(bullet);
-                    newBullet.transform.position = transform.position;
+                    Instantiate(bullet, transform.position, transform.rotation);
                     onState = false;
                     return Transitions["ReloadState"];
-
                 }
             }
 

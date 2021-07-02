@@ -130,6 +130,7 @@ public class EnemyMovement : MonoBehaviour
 
         if (statesTriggers[EStates.CHASE]|| statesTriggers[EStates.ALERT])
         {
+            myAnim.SetBool("PlayerInSight", true);
 
             nearWaypoints = Physics.OverlapSphere(transform.position, 10, myLayermask);
 
@@ -199,16 +200,32 @@ public class EnemyMovement : MonoBehaviour
     {
         if (statesTriggers[EStates.CHASE])
         {
+            myAnim.SetLayerWeight(1, 1 + Time.deltaTime);
+            myAnim.SetBool("PlayerInSight", true);
+
             if (myAgent.speed <= 1f)
                     myAgent.speed += Time.deltaTime / 3;
 
                 if (offsetSpeed <= 2f)
                     offsetSpeed += Time.deltaTime / 2;
+
+            if (Vector3.Distance(transform.position, player.transform.position) < 1.5f)
+            {
+                myAgent.speed = 0;
+                speed = 0;
+                offsetSpeed = 0;
+
+                float angleBtwnPlayerAndForward = Vector3.Angle(transform.forward, 
+                    (player.transform.position - transform.position).normalized);
+                transform.LookAt(player.transform.position);
+            }
         }
 
 
         if (statesTriggers[EStates.PATROL])
         {
+            myAnim.SetLayerWeight(1, 0);
+            myAnim.SetBool("PlayerInSight", false);
             if (myAgent.speed >= 0.5f)
                 myAgent.speed -= Time.deltaTime / 3;
 
