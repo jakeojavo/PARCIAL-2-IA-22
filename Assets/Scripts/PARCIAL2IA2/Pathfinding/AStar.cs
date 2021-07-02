@@ -4,16 +4,16 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using VSCodeEditor;
 
-public class AStar<T> {
-
+public class AStar<T>
+{
+    public const float CONSTANTVAR = 30;
 
     public IEnumerable<T> Run(T                                     start,
                               Func<T, bool>                         isGoal,
                               Func<T, IEnumerable<WeightedNode<T>>> explode,
                               Func<T, float>                        getHeuristic) {
 
-        var stopwatch = new Stopwatch();
-        stopwatch.Start();
+       
 
        
         var queue     = new PriorityQueue<T>();
@@ -25,8 +25,11 @@ public class AStar<T> {
         queue.Enqueue(new WeightedNode<T>(start, 0));
         
         while (!queue.IsEmpty) {
-
-            if (stopwatch.ElapsedMilliseconds >= 1f / 30f)
+            
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            
+            if (stopwatch.ElapsedMilliseconds >= 1f / CONSTANTVAR)
             {
                 stopwatch.Restart();
                 UnityEngine.Debug.LogError("GOAP DELAY TO CALCULATE ON ASTAR");

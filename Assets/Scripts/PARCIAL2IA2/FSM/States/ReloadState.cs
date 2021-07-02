@@ -86,9 +86,5 @@ public class ReloadState : MonoBaseState {
         return this;
 
     }
-
-    public override void UpdateLoop()
-    {
-
-    }
+    
 }

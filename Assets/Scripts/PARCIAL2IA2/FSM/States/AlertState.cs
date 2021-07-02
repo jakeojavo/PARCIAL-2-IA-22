@@ -58,6 +58,7 @@ public class AlertState : MonoBaseState {
         if (myLineOfSight.playerOnSight && myLineOfSight.playerOnAngle) //si ve al player, replanea
         {
             onState = false;
+            myWorldState.seenPlayer = true;
             OnNeedsReplan?.Invoke();
         }
 
@@ -72,7 +73,7 @@ public class AlertState : MonoBaseState {
         {
             onState = false;
             Debug.Log("fui a patrol, vi al player");
-            myWorldState.seenPlayer = false;
+            //myWorldState.seenPlayer = false;
             return Transitions["PatrolState"];
         }
 

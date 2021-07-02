@@ -84,7 +84,7 @@ public class GoapEnemy : MonoBehaviour {
 
         var planner = new GoapPlanner();
 
-        planner.Run(from, to, actions);
+        planner.Run(from, to, actions, OnReplan);
     }
 
     private void PlanAndExecute()
