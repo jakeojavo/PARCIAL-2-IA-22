@@ -101,15 +101,6 @@ public class EnemyMovement : MonoBehaviour
 
         if (statesTriggers[EStates.PATROL] == true)
         {
-            if (myAgent.speed >= 0.5f)
-                myAgent.speed -= Time.deltaTime / 3;
-
-            if (myAgent.speed < 0.5f)
-                myAgent.speed += Time.deltaTime;
-
-            if (offsetSpeed >= 0f)
-                offsetSpeed -= Time.deltaTime / 2;
-            
             target = myPatrolWaypoints[currentWaypoint].transform;
 
             if (Vector3.Distance(transform.position, myPatrolWaypoints[currentWaypoint].transform.position) <= 1f && currentWaypoint < waypointCount - 1)
@@ -137,7 +128,7 @@ public class EnemyMovement : MonoBehaviour
         //    myAgent.speed = 0;
         //}
 
-        if (statesTriggers[EStates.CHASE] == true || statesTriggers[EStates.ALERT] == true)
+        if (statesTriggers[EStates.CHASE]|| statesTriggers[EStates.ALERT])
         {
 
             nearWaypoints = Physics.OverlapSphere(transform.position, 10, myLayermask);
@@ -208,23 +199,11 @@ public class EnemyMovement : MonoBehaviour
     {
         if (statesTriggers[EStates.CHASE])
         {
-            if (sqrDistance <= 1f)
-            {
-                if (myAgent.speed >= 0f)
-                    myAgent.speed -= Time.deltaTime / 3;
-
-                if (offsetSpeed >= 0f)
-                    offsetSpeed -= Time.deltaTime / 2;
-            }
-
-            if (sqrDistance >= 1f)
-            {
-                if (myAgent.speed <= 1f)
+            if (myAgent.speed <= 1f)
                     myAgent.speed += Time.deltaTime / 3;
 
-                if (offsetSpeed <= 3f)
+                if (offsetSpeed <= 2f)
                     offsetSpeed += Time.deltaTime / 2;
-            }  
         }
 
 

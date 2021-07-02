@@ -45,54 +45,49 @@ public class AttackState : MonoBaseState
     {
         if (onState)
         {
-
-            if (distance <= 4f)
+            if (myWorldState.seenPlayer)
             {
-                shootCount += Time.deltaTime;
+                if (myMovement.target != player.transform)
+                    myMovement.target = player.transform;
             }
-
-            if (distance > 4f)
-            {
-                shootCount = 0f;
-            }
+            distance = (player.transform.position - transform.position).sqrMagnitude;
         }
     }
 
     public override void UpdateLoop()
     {
-        if (myMovement.target != player.transform)
-            myMovement.target = player.transform;
-
-        distance = (player.transform.position - transform.position).sqrMagnitude;
+       
 
     }
 
     public override IState ProcessInput()
     {
-
         if (myWorldState.seenPlayer)
-        {
-            if (distance >= 4f) //si me alejo del player, replaneo
             {
-                OnNeedsReplan?.Invoke();
+                if (distance >= 20f) //si me alejo del player, replaneo
+                {
+                    onState = false;
+                    OnNeedsReplan?.Invoke();
+                }
+
+                if (distance < 10f)
+                {
+                    var newBullet = GameObject.Instantiate(bullet);
+                    newBullet.transform.position = transform.position;
+                    onState = false;
+                    return Transitions["ReloadState"];
+
+                }
             }
 
-            if (distance <= 2f && shootCount >= 3f)
+            if (!myWorldState.seenPlayer)
             {
-                var newBullet = GameObject.Instantiate(bullet);
-                newBullet.transform.position = transform.position;
-
-                Debug.LogError("Cuanto se ejecuta la trans a Reload");
+                onState = false;
                 return Transitions["ReloadState"];
-
             }
-        }
 
-        if (!myWorldState.seenPlayer)
-        {
-            return Transitions["ReloadState"];
-        }
-        return this;
+
+            return this;
 
     }
 }

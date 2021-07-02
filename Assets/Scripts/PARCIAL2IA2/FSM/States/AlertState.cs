@@ -36,8 +36,6 @@ public class AlertState : MonoBaseState {
         }
 
         onState = true;
-
-        timer = 0;
     }
 
     public override void UpdateLoop() {
@@ -46,37 +44,23 @@ public class AlertState : MonoBaseState {
 
     public void Update()
     {
-        if (myWorldState.seenPlayer)
-        {
-            timer += Time.deltaTime;
-        }
+
     }
 
 
     public override IState ProcessInput() {
+        
+            if (!myWorldState.seenPlayer) //si no vio al player previamente, va directo a patrol
+            {
+                onState = false;
+                return Transitions["PatrolState"];
+            }
 
-        if (myLineOfSight.playerOnSight && myLineOfSight.playerOnAngle) //si ve al player, replanea
-        {
-            onState = false;
-            myWorldState.seenPlayer = true;
-            OnNeedsReplan?.Invoke();
-        }
+            if (myLineOfSight.playerOnSight)
+            {
+                OnNeedsReplan?.Invoke();
+            }
 
-        if (!myWorldState.seenPlayer) //si no vio al player previamente, va directo a patrol
-        {
-            onState = false;
-            Debug.Log("fui a patrol, no vi al player");
-            return Transitions["PatrolState"];
-        }
-
-        if (timer >= 10f) //pero si lo vio suma el timer, y pasados 10 segundos va a patrol
-        {
-            onState = false;
-            Debug.Log("fui a patrol, vi al player");
-            //myWorldState.seenPlayer = false;
-            return Transitions["PatrolState"];
-        }
-
-        return this;
+            return this;
     }
 }

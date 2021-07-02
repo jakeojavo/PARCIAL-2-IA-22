@@ -12,6 +12,7 @@ public class PatrolState : MonoBaseState {
 
     public float timeToIdle;
     public override event Action OnNeedsReplan;
+    public EnemyWorldState myWorldState;
 
     public bool onState;
     
@@ -20,7 +21,8 @@ public class PatrolState : MonoBaseState {
         myRobot = gameObject;
         myLineOfSight = GetComponent<EnemyLineOfSight>();
         myMovement = GetComponent<EnemyMovement>();
-       
+        myWorldState = GetComponent<EnemyWorldState>();
+
     }
     
     public override void Enter(IState from, Dictionary<string, object> transitionParameters = null)
@@ -43,25 +45,35 @@ public class PatrolState : MonoBaseState {
 
     private void Update()
     {
-        timeToIdle += Time.deltaTime;
+        if (onState)
+        {
+            timeToIdle += Time.deltaTime;
+        }
+        
     }
 
 
     public override IState ProcessInput() {
 
-        if (timeToIdle >= 10) //cada 10 segundos va a IDLE
+        if (onState)
         {
-            Debug.Log("fui a idle");
-            timeToIdle = 0;
-            onState = false;
-            return Transitions["IdleState"];
-        }
+            if (timeToIdle >= 10) //cada 10 segundos va a IDLE
+            {
+                Debug.Log("fui a idle");
+                timeToIdle = 0;
+                onState = false;
+                return Transitions["IdleState"];
+            }
 
-        if (myLineOfSight.playerOnSight && myLineOfSight.playerOnAngle) //si veo al player, replaneo
-        {
-            OnNeedsReplan?.Invoke();
+            if (myWorldState.seenPlayer)
+            {
+                onState = false;
+                timeToIdle = 0;
+                OnNeedsReplan?.Invoke();
+            }
+ 
         }
-
+        
         return this;
     }
 }

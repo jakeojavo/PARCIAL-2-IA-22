@@ -14,6 +14,7 @@ public class ChaseState : MonoBaseState {
     public GameObject player;
     public float counter;
     public float sqrDistance;
+    public bool onState;
 
     private void Awake()
     {
@@ -24,48 +25,54 @@ public class ChaseState : MonoBaseState {
         player = GameObject.FindGameObjectWithTag("Player");
     }
 
+    public override void Enter(IState @from, Dictionary<string, object> transitionParameters = null)
+    {
+        base.Enter(@from, transitionParameters);
+        onState = true;
+        myMovement.SetAllStatesToFalse();
+        myMovement.statesTriggers[EStates.CHASE] = true;
+    }
+
 
     public override void UpdateLoop()
     {
         
-        sqrDistance = (player.transform.position - transform.position).sqrMagnitude;
-        
-        if (myLineOfSight.playerOnSight && myLineOfSight.playerOnAngle)
+      
+    }
+
+    public void Update()
+    {
+        if (onState)
         {
-            if (!myWorldState.seenPlayer) myWorldState.seenPlayer = true;
-
-            if (!myMovement.statesTriggers[EStates.CHASE])
-            {
-                myMovement.SetAllStatesToFalse();
-                myMovement.statesTriggers[EStates.CHASE] = true;
-            }
-
+            sqrDistance = (player.transform.position - transform.position).sqrMagnitude;
         }
 
-    }    
+    }
 
     public override IState ProcessInput() {
-
-        if (myWorldState.seenPlayer) //comportamiento si vio al player
-        {
-            if (sqrDistance <= 4f)
+        
+            if (myWorldState.seenPlayer) //comportamiento si vio al player
             {
-                myWorldState.seenPlayer = true;
-                return  Transitions["AttackState"];
-            }
+                if (sqrDistance <= 6f)
+                {
+                    onState = false;
+                    return  Transitions["AttackState"];
+                }
             
-            if (!myLineOfSight.playerOnSight && !myLineOfSight.playerOnAngle)
-            {
-                OnNeedsReplan?.Invoke();
+                if (sqrDistance >= 100f)
+                {
+                    onState = false;
+                    OnNeedsReplan?.Invoke();
+                }
             }
-        }
 
-        else //si no lo vi sigo con las transiciones
-        {
-            return Transitions["AttackState"];
-        }
-
-            return this;
+            else //si no lo vi sigo con las transiciones
+            {
+                onState = false;
+                return Transitions["AttackState"];
+            } 
+        
+        return this;
 
     }
 

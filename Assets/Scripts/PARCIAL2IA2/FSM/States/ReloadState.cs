@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Compression;
 using FSM;
 using UnityEngine;
 
@@ -39,7 +40,7 @@ public class ReloadState : MonoBaseState {
 
     public override void UpdateLoop()
     {
-        sqrDistance = (player.transform.position - transform.position).sqrMagnitude;
+       
     }
 
     private void Update()
@@ -56,32 +57,37 @@ public class ReloadState : MonoBaseState {
             
                 reloadTime += Time.deltaTime;
 
+                if (reloadTime >= 3)
+                    reloadTime = 0;
+
             }
+            
+            sqrDistance = (player.transform.position - transform.position).sqrMagnitude;
         }
     }
 
     public override IState ProcessInput() {
- 
-        if (myWorldState.seenPlayer) //si ya vio previamente al player
+        
+        if (!myWorldState.seenPlayer)
         {
-            if (myLineOfSight.playerOnSight && myLineOfSight.playerOnAngle && reloadTime >= 3
-            ) //si paso el tiempo de recarga y lo ve, replanea
-            {
-                reloadTime = 0;
-                onState = false;
-                OnNeedsReplan?.Invoke();
-            }
-
-            if (!myLineOfSight.playerOnSight && !myLineOfSight.playerOnAngle && reloadTime >= 3
-            ) //si paso el tiempo de recarga y no lo ve, va a alerta
-            {
-                reloadTime = 0;
-                onState = false;
-                return Transitions["AlertState"];
-            }
+            onState = false;
+            return Transitions["AlertState"];
+        }
+        
+        if (myLineOfSight.playerOnSight) //si paso el tiempo de recarga y lo ve, replanea
+        {
+            onState = false; 
+            OnNeedsReplan?.Invoke();
+            Debug.Log("a");
         }
 
-        else return Transitions["AlertState"]; //si no vio al player, pasa a alerta
+        if (reloadTime >= 3)
+        {
+            onState = false;
+            return Transitions["AlertState"];
+            Debug.Log("b");
+        }
+
 
         return this;
 
