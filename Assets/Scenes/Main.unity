@@ -1567,6 +1567,7 @@ MonoBehaviour:
     m_Bits: 2048
   player: {fileID: 0}
   myLineOfSight: {fileID: 0}
+  sqrDistance: 0
 --- !u!114 &266279300
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1587,6 +1588,7 @@ MonoBehaviour:
   playerOnAngle: 0
   playerOnSight: 0
   myAnim: {fileID: 0}
+  myWorldState: {fileID: 0}
 --- !u!54 &266279301
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1678,11 +1680,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab949361759fb6549803677c612ba34d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <HasStarted>k__BackingField: 0
-  myRobot: {fileID: 0}
-  myBehaviours: {fileID: 0}
-  myLineOfSight: {fileID: 0}
-  myMovement: {fileID: 0}
 --- !u!1 &272633816
 GameObject:
   m_ObjectHideFlags: 0
@@ -53278,6 +53275,7 @@ MonoBehaviour:
     m_Bits: 2048
   player: {fileID: 0}
   myLineOfSight: {fileID: 0}
+  sqrDistance: 0
 --- !u!114 &1284846042
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -53298,6 +53296,7 @@ MonoBehaviour:
   playerOnAngle: 0
   playerOnSight: 0
   myAnim: {fileID: 0}
+  myWorldState: {fileID: 0}
 --- !u!54 &1284846043
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -53389,11 +53388,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab949361759fb6549803677c612ba34d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <HasStarted>k__BackingField: 0
-  myRobot: {fileID: 0}
-  myBehaviours: {fileID: 0}
-  myLineOfSight: {fileID: 0}
-  myMovement: {fileID: 0}
 --- !u!1 &1289476278
 GameObject:
   m_ObjectHideFlags: 0
@@ -54965,6 +54959,7 @@ GameObject:
   - component: {fileID: 1316798613}
   - component: {fileID: 1316798612}
   - component: {fileID: 1316798611}
+  - component: {fileID: 1316798614}
   m_Layer: 0
   m_Name: AdvancedRobotGuard
   m_TagString: Enemy
@@ -54992,6 +54987,7 @@ MonoBehaviour:
   playerOnAngle: 0
   playerOnSight: 0
   myAnim: {fileID: 0}
+  myWorldState: {fileID: 0}
 --- !u!114 &1316798600
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55077,6 +55073,7 @@ MonoBehaviour:
     m_Bits: 2048
   player: {fileID: 0}
   myLineOfSight: {fileID: 0}
+  sqrDistance: 0
 --- !u!195 &1316798602
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -55194,6 +55191,9 @@ MonoBehaviour:
   myRobot: {fileID: 0}
   myLineOfSight: {fileID: 0}
   myMovement: {fileID: 0}
+  timeToIdle: 0
+  myWorldState: {fileID: 0}
+  onState: 0
 --- !u!114 &1316798608
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55206,10 +55206,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 897479c2b16c07444b9a732f61e7ad2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myBehaviours: {fileID: 0}
+  myWorldState: {fileID: 0}
   myLineOfSight: {fileID: 0}
   myMovement: {fileID: 0}
   player: {fileID: 0}
+  counter: 0
+  sqrDistance: 0
+  onState: 0
 --- !u!114 &1316798609
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55226,11 +55229,14 @@ MonoBehaviour:
   playerHealth: {fileID: 0}
   myRobot: {fileID: 0}
   myPlayerHealth: {fileID: 0}
-  shootCount: 4
   myMovement: {fileID: 0}
   myShootPlayer: {fileID: 0}
+  shootCount: 4
   bullet: {fileID: 4579223023595578892, guid: ee9f86a2d6b61324f8f436178f1a24ab, type: 3}
   player: {fileID: 0}
+  distance: 0
+  myWorldState: {fileID: 0}
+  onState: 0
 --- !u!114 &1316798610
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55266,6 +55272,9 @@ MonoBehaviour:
   myMovement: {fileID: 0}
   player: {fileID: 0}
   reloadTime: 0
+  myWorldState: {fileID: 0}
+  sqrDistance: 0
+  onState: 0
 --- !u!114 &1316798612
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55281,6 +55290,8 @@ MonoBehaviour:
   myRobot: {fileID: 0}
   myLineOfSight: {fileID: 0}
   myMovement: {fileID: 0}
+  time: 0
+  onState: 0
 --- !u!114 &1316798613
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55296,6 +55307,22 @@ MonoBehaviour:
   myRobot: {fileID: 0}
   myLineOfSight: {fileID: 0}
   myMovement: {fileID: 0}
+  myWorldState: {fileID: 0}
+  timer: 0
+  onState: 0
+--- !u!114 &1316798614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1316798598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03e3587f62536d4419c8203d9b0b6397, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  seenPlayer: 0
   timer: 0
 --- !u!1 &1316799490
 GameObject:
@@ -58527,6 +58554,7 @@ MonoBehaviour:
     m_Bits: 2048
   player: {fileID: 0}
   myLineOfSight: {fileID: 0}
+  sqrDistance: 0
 --- !u!114 &1651608430
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58547,6 +58575,7 @@ MonoBehaviour:
   playerOnAngle: 0
   playerOnSight: 0
   myAnim: {fileID: 0}
+  myWorldState: {fileID: 0}
 --- !u!54 &1651608431
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -58638,11 +58667,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab949361759fb6549803677c612ba34d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <HasStarted>k__BackingField: 0
-  myRobot: {fileID: 0}
-  myBehaviours: {fileID: 0}
-  myLineOfSight: {fileID: 0}
-  myMovement: {fileID: 0}
 --- !u!1 &1654308930
 GameObject:
   m_ObjectHideFlags: 0
