@@ -25,9 +25,9 @@ public class AlertState : MonoBaseState {
 
     }
     
-    public override void Enter(IState @from, Dictionary<string, object> transitionParameters = null)
+    public override void Enter(IState from, Dictionary<string, object> transitionParameters = null)
     {
-        base.Enter(@from, transitionParameters);
+        base.Enter(from, transitionParameters);
         
         if (!myMovement.statesTriggers[EStates.ALERT])
         {

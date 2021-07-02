@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using FSM;
 using UnityEngine;
 
 public class ChaseState : MonoBaseState {
     
+    public override event Action OnNeedsReplan;
     public EnemyWorldState myWorldState;
     public EnemyLineOfSight myLineOfSight;
     public EnemyMovement myMovement;
@@ -12,7 +14,7 @@ public class ChaseState : MonoBaseState {
     public GameObject player;
     public float counter;
     public float sqrDistance;
-    
+
     private void Awake()
     {
         
@@ -48,13 +50,13 @@ public class ChaseState : MonoBaseState {
         {
             if (sqrDistance <= 4f)
             {
-                myWorldState.seenPlayer = false;
+                myWorldState.seenPlayer = true;
                 return  Transitions["AttackState"];
             }
             
             if (!myLineOfSight.playerOnSight && !myLineOfSight.playerOnAngle)
             {
-                return  Transitions["AttackState"];
+                OnNeedsReplan?.Invoke();
             }
         }
 
@@ -66,4 +68,5 @@ public class ChaseState : MonoBaseState {
             return this;
 
     }
+
 }

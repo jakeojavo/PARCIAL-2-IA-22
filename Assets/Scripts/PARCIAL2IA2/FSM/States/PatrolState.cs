@@ -23,9 +23,9 @@ public class PatrolState : MonoBaseState {
        
     }
     
-    public override void Enter(IState @from, Dictionary<string, object> transitionParameters = null)
+    public override void Enter(IState from, Dictionary<string, object> transitionParameters = null)
     {
-        base.Enter(@from, transitionParameters);
+        base.Enter(from, transitionParameters);
         
         if (!myMovement.statesTriggers[EStates.PATROL])
         {
@@ -45,6 +45,7 @@ public class PatrolState : MonoBaseState {
     {
         timeToIdle += Time.deltaTime;
     }
+
 
     public override IState ProcessInput() {
 

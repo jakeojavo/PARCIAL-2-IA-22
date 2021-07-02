@@ -33,15 +33,6 @@ namespace FSM {
         public IEnumerator Update() {
             while (Active) {
 
-                //var stopwatch = new Stopwatch();
-                //stopwatch.Start();
-
-                //if (stopwatch.ElapsedMilliseconds >= 1f / 30f)
-                //{
-                //    yield return null;
-                //    stopwatch.Restart();
-                //}
-
                 CurrentState.UpdateLoop();
                 
                 var nextState = CurrentState.ProcessInput();
