@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using FSM;
 using UnityEngine;
@@ -23,14 +24,8 @@ public class GoapPlanner
                              state => Satisfies(state, to),
                              node => Explode(node, actions, ref _watchdog),
                              state => GetHeuristic(state, to));
-
-        if (path != null)
+        
             return CalculateGoap(path);
-        else
-        {
-            onReplan.Invoke();
-            return null;
-        }
     }
 
     public static FiniteStateMachine ConfigureFSM(IEnumerable<GOAPAction> plan, Func<IEnumerator, Coroutine> startCoroutine)

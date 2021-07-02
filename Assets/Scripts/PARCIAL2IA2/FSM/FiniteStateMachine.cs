@@ -10,6 +10,7 @@ namespace FSM {
     public class FiniteStateMachine {
 
         private const int _MAX_TRANSITIONS_PER_FRAME = 3;
+        public const float MAX_FRT = 40;
 
         public delegate void StateEvent(IState from, IState to);
 
@@ -32,6 +33,17 @@ namespace FSM {
 
         public IEnumerator Update() {
             while (Active) {
+
+                var stopwatch = new Stopwatch();
+                stopwatch.Start();
+
+                if (stopwatch.ElapsedMilliseconds >= 1f / MAX_FRT)
+                {
+                    stopwatch.Restart();
+                    UnityEngine.Debug.LogError("GOAP DELAY TO CALCULATE ON ASTAR"); //GOAP goap ENTREGA PARCIAL IA2-parcial 2 TIMESLICING
+                    yield return null;
+                }
+
 
                 CurrentState.UpdateLoop();
                 
@@ -88,6 +100,7 @@ namespace FSM {
                 _isActive = value;
                 if (_isActive) {
                     if (!CurrentState.HasStarted) CurrentState.Enter(CurrentState, null);
+
                     _startCoroutine(Update());
                     OnActive?.Invoke();
                 }
